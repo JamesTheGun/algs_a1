@@ -51,15 +51,38 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         }
     }
 
-    private Node get_node(int idx) {
-        checkBounds(idx, false);
-        int curIdx = 0;
+    private Node getNodeFirstHalf(int idx) {
+        //System.out.println("####");
+        checkBounds(idx, true);
         Node cur = this.head;
-        while (cur != null && curIdx != idx) {
+        int curIdx = 0;
+        while (curIdx < idx) {
             cur = cur.getNext();
             curIdx++;
         }
         return cur;
+    }
+
+    private Node getNodeSecondHalf(int idx) {
+        //System.out.println("----");
+        checkBounds(idx, true);
+        int curIdx = size-1;
+        Node cur = this.tail;
+        while (curIdx > idx) {
+            cur = cur.getPrev();
+            curIdx--;
+        }
+        return cur;
+    }
+
+    private Node getNode(int idx) {
+        //System.out.println("++++");
+        //get node from front if its closer to the front
+        if (idx < size/2) {
+            return getNodeFirstHalf(idx);
+        }
+        //get node from back if its closer to the back.
+        return getNodeSecondHalf(idx);
     }
 
     /**
@@ -68,7 +91,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
      */
     @Override // See ListInterface
     public T get(int idx) {
-        return get_node(idx).getData(); //no reason to keep the node-getting logic here -- moved it to another method so it can be used in other places
+        return getNode(idx).getData(); //no reason to keep the node-getting logic here -- moved it to another method so it can be used in other places
     }
 
 
@@ -78,11 +101,8 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
      */
     @Override // See ListInterface
     public T set(int idx, T t) {
-        Node cur = head;
-        get(idx);
-        while (idx > 0) {
-            cur = cur.getNext();
-        }
+        checkBounds(idx,false);
+        Node cur = getNode(idx);
         T oldData = cur.getData();
         cur.setData(t);
         return oldData;
@@ -140,18 +160,15 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         } else if (idx == this.size) { // Case 2: The index is the tail
             return this.append(data);
         }
-        int curIdx = 0;
-        Node cur = this.head;
-        while (cur != null && curIdx != idx) {
-            cur = cur.getNext();
-            curIdx++;
-        }
+
+        Node cur = getNode(idx);
 
         Node newNode = new Node(data);
         newNode.setPrev(cur.getPrev());
         newNode.setNext(cur);
         cur.getPrev().setNext(newNode);
         cur.setPrev(newNode);
+        size++;
         return true;
     }
 
@@ -181,7 +198,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
      */
     @Override // See ListInterface
     public T remove(int idx) {
-        Node node = get_node(idx); //this throws the exception
+        Node node = getNode(idx); //this throws the exception
         Node prev = node.getPrev();
         Node next = node.getNext();
         if (prev != null) {
