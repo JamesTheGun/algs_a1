@@ -35,12 +35,15 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     // See ListInterface
     @Override
     public int size() {
-        return -1;
+        return size;
     }
 
     // See ListInterface
     @Override
     public boolean isEmpty() {
+        if (size == 0) {
+            return true;
+        }
         return false;
     }
 
@@ -51,6 +54,9 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * testing it explicitly.
      */
     public boolean isFull() {
+        if (size == capacity) {
+            return true;
+        }
         return false;
     }
 
@@ -60,7 +66,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * be testing it explicitly.
      */
     public int getCapacity() {
-        return -1;
+        return capacity;
     }
 
     /**
@@ -71,7 +77,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean append(T element) {
-
+        if (!isFull()) {
+            data[size++] = element;
+            return true;
+        }
         return false;
     }
 
@@ -83,8 +92,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean prepend(T element) {
-
-        return false;
+        return add(0,element);
     }
 
     /**
@@ -99,7 +107,19 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean add(int ix, T element) {
-
+        if (ix > size || ix < 0) {
+            throw new IndexOutOfBoundsException("Index " + ix + " is out of bounds.");
+        }
+        if (!isFull()) {
+            size++;
+            T element_to_move;
+            for(int i = ix; i < size; i++) {
+                element_to_move = data[i];
+                data[i] = element;
+                element = element_to_move;
+            }
+            return true;
+        }
         return false;
     }
 
@@ -110,8 +130,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public T get(int ix) {
-
-        return null;
+        if (ix > size || ix < 0) {
+            throw new IndexOutOfBoundsException("Index " + ix + " is out of bounds.");
+        }
+        return data[ix];
     }
 
     /**
@@ -121,8 +143,12 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public T set(int ix, T element) {
-
-        return null;
+        if (ix > size || ix < 0) {
+            throw new IndexOutOfBoundsException("Index " + ix + " is out of bounds.");
+        }
+        T old = data[ix];
+        data[ix] = element;
+        return old;
     }
 
     /**
@@ -132,8 +158,16 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public T remove(int ix) {
+        if (ix > size || ix < 0) {
+            throw new IndexOutOfBoundsException("Index " + ix + " is out of bounds.");
+        }
 
-        return null;
+        T element = get(ix);
+        for(int i = ix; i < size; i++) {
+            data[i] = data[i+1];
+        }
+        size--;
+        return element;
     }
 
     /**
