@@ -8,7 +8,6 @@
 // Import the DLL
 import uq.comp3506.a1.structures.DoublyLinkedList;
 
-
 public class TestDoublyLinkedList {
 
     public static void testCreateAndSize() {

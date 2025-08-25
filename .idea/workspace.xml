@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="80063767-274b-4ecf-9bba-f5b5748dcb48" name="Changes" comment="" />
+    <list default="true" id="80063767-274b-4ecf-9bba-f5b5748dcb48" name="Changes" comment="&quot;initial commit&quot;">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/TestDoublyLinkedList.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/TestDoublyLinkedList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/TestDynamicArray.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/TestDynamicArray.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/TestProblems.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/TestProblems.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;JamesTheGun&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/JamesTheGun/algs_a1.git&quot;,
+    &quot;accountId&quot;: &quot;bee27d95-25a7-4b61-8873-5f56191b5eaf&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="31l2Je65AVznwAPrFZlC40qc3iR" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -21,8 +45,17 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.A1.executor": "Run",
+    "Application.TestBitVector.executor": "Run",
+    "Application.TestDoublyLinkedList (1).executor": "Run",
+    "Application.TestDoublyLinkedList.executor": "Run",
+    "Application.test.TestDoublyLinkedList.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/jamed/OneDrive/Documents/alg_and_ds/A2",
     "node.js.detected.package.eslint": "true",
@@ -30,6 +63,9 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -37,6 +73,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
       </set>
     </attachedChunks>
   </component>
@@ -47,11 +84,37 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1756084268535</updated>
-      <workItem from="1756084280004" duration="347000" />
+      <workItem from="1756084280004" duration="3437000" />
+      <workItem from="1756087890880" duration="889000" />
+      <workItem from="1756088802550" duration="132000" />
     </task>
+    <task id="LOCAL-00001" summary="&quot;initial commit&quot;">
+      <option name="closed" value="true" />
+      <created>1756084969798</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1756084969798</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="&quot;initial commit&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;initial commit&quot;" />
   </component>
 </project>
