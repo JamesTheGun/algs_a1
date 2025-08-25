@@ -18,6 +18,10 @@ import uq.comp3506.a1.structures.DoublyLinkedList;
 
 public class TestDoublyLinkedList {
 
+    private static void print(Object text) {
+        System.out.println(text);
+    }
+
     private static DoublyLinkedList<Integer> createPopulatedList() {
         DoublyLinkedList<Integer> dll = new DoublyLinkedList<Integer>();
         dll.append(0);
@@ -61,12 +65,33 @@ public class TestDoublyLinkedList {
         //dll.remove(10);
         assert dll.get(0) == 0: "assertion failed C1";
         assert dll.get(1) == 1: "assertion failed C2";
-        assert dll.getLast() == 3: "assertion failed C3";
+        assert dll.getLast() == 9: "assertion failed C3";
+        assert dll.get(8) == 9: "assertion failed C4";
     }
 
     public static void hints() {
         System.out.println("Look at the Ed Lesson on testing!");
         System.out.println("Consider using randomness to do large scale testing!");
+    }
+
+    public static void testAdd() {
+        DoublyLinkedList<Integer> dll_populated = createPopulatedList();
+        dll_populated.add(8,99);
+        dll_populated.add(0,88);
+        dll_populated.add(11,77);
+        //dll.remove(10);
+        assert dll_populated.get(0) == 88: "assertion failed E1";
+        assert dll_populated.get(1) == 0: "assertion failed E2";
+        assert dll_populated.get(9) == 99: "assertion failed E3";
+        assert dll_populated.get(10) == 8: "assertion failed E4";
+        assert dll_populated.getLast() == 77: "assertion failed E5";
+        assert dll_populated.get(12) == 77: "assertion failed E6"; //fails here, probs tail not updated
+    }
+
+    public static void testMisc() {
+        DoublyLinkedList<Integer> dll = createPopulatedList();
+        print(dll.get(9));
+        //dll.get(10); //testing error raising
     }
 
     public static void main(String[] args) {
@@ -75,6 +100,8 @@ public class TestDoublyLinkedList {
         testCreateAndSize();
         testInsertion();
         testRemove();
+        testAdd();
+        testMisc();
         System.out.println("Success!");
         assert 1==2 : "Assertions are working!";
     }

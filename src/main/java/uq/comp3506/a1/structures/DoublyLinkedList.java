@@ -181,7 +181,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
      */
     @Override // See ListInterface
     public T remove(int idx) {
-        Node node = get_node(idx);
+        Node node = get_node(idx); //this throws the exception
         Node prev = node.getPrev();
         Node next = node.getNext();
         if (prev != null) {
