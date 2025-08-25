@@ -51,12 +51,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         }
     }
 
-    /**
-     * Returns the element at idx if it exists, throwing an exception if the
-     * index is out of bounds (via checkBounds)
-     */
-    @Override // See ListInterface
-    public T get(int idx) {
+    private Node get_node(int idx) {
         checkBounds(idx, false);
         int curIdx = 0;
         Node cur = this.head;
@@ -64,7 +59,16 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
             cur = cur.getNext();
             curIdx++;
         }
-        return cur.getData();
+        return cur;
+    }
+
+    /**
+     * Returns the element at idx if it exists, throwing an exception if the
+     * index is out of bounds (via checkBounds)
+     */
+    @Override // See ListInterface
+    public T get(int idx) {
+        return get_node(idx).getData(); //no reason to keep the node-getting logic here -- moved it to another method so it can be used in other places
     }
 
 
@@ -75,6 +79,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     @Override // See ListInterface
     public T set(int idx, T t) {
         Node cur = head;
+        get(idx);
         while (idx > 0) {
             cur = cur.getNext();
         }
@@ -167,7 +172,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         if (isEmpty()) {
             return null;
         }
-        return head.getData();
+        return tail.getData();
     }
 
     /**
@@ -176,15 +181,16 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
      */
     @Override // See ListInterface
     public T remove(int idx) {
-        Node cur = head;
-        while (idx > 0) {
-            cur = cur.getNext();
+        Node node = get_node(idx);
+        Node prev = node.getPrev();
+        Node next = node.getNext();
+        if (prev != null) {
+            prev.setNext(next);
         }
-        Node prev = cur.getPrev();
-        Node next = cur.getNext();
-        prev.setNext(next);
-        next.setPrev(prev);
-        return cur.getData();
+        if (next != null) {
+            next.setPrev(prev);
+        }
+        return node.getData();
     }
 
     /**

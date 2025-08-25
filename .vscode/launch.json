@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}",
+            "vmArgs": "-ea"
+        },
+        {
+            "type": "java",
+            "name": "TestBitVector",
+            "request": "launch",
+            "mainClass": "TestBitVector",
+            "projectName": "A2_6abd7f3d",
+            "vmArgs": "-ea"
+        },
+        {
+            "type": "java",
+            "name": "TestDNAStructure",
+            "request": "launch",
+            "mainClass": "TestDNAStructure",
+            "projectName": "A2_6abd7f3d",
+            "vmArgs": "-ea"
+        },
+        {
+            "type": "java",
+            "name": "TestDoublyLinkedList",
+            "request": "launch",
+            "mainClass": "TestDoublyLinkedList",
+            "projectName": "A2_6abd7f3d",
+            "vmArgs": "-ea"
+        },
+        {
+            "type": "java",
+            "name": "TestDynamicArray",
+            "request": "launch",
+            "mainClass": "TestDynamicArray",
+            "projectName": "A2_6abd7f3d",
+            "vmArgs": "-ea"
+        },
+        {
+            "type": "java",
+            "name": "TestProblems",
+            "request": "launch",
+            "mainClass": "TestProblems",
+            "projectName": "A2_6abd7f3d",
+            "vmArgs": "-ea"
+        }
+    ]
+}
