@@ -66,7 +66,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     }
 
     private void decrementHead() {
-        head = -1;
+        head = head-1;
         if (head < 0) {
             head = (capacity-1);
         }
@@ -88,17 +88,17 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     private void grow(){
 
         //intialise
-        int new_capacity = capacity * 2;
-        T[] new_data = (T[]) new Comparable[new_capacity];
+        int newCapacity = capacity * 2;
+        T[] newData = (T[]) new Comparable[newCapacity];
         
         for(int i = 0; i < size; i++) {
-            new_data[i] = get(i);
+            newData[i] = get(i);
         }
 
-        data = new_data;
+        data = newData;
         head = size-1;
         tail = 0;
-        capacity = new_capacity;
+        capacity = newCapacity;
     }
 
     private void shrink(){
@@ -137,7 +137,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         return false;
     }
 
-    private void make_safe_for_extra_element () {
+    private void makeSafeForExtraElement () {
         if (isFull()) {
             grow();
         }
@@ -173,14 +173,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         if (handleAddToEmptyList(element)) {
             return true;
         }
-        make_safe_for_extra_element();
+        makeSafeForExtraElement();
         size++;
         incrementHead();
-        System.out.println("khjasdhjk asdghjkhasgdcjkh");
-        System.out.println(data[head]);
-        System.out.println(element);
         data[head] = element;
-        System.out.println(data[head]);
         return true;
     }
 
@@ -195,7 +191,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         if (handleAddToEmptyList(element)) {
             return true;
         }
-        make_safe_for_extra_element();
+        makeSafeForExtraElement();
         decrementTale();
         data[tail] = element;
         size++;
@@ -228,7 +224,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
 
     private boolean addSlow(int ix, T element) {
         checkBounds(ix, false);
-        make_safe_for_extra_element();
+        makeSafeForExtraElement();
         size++;
         incrementHead();
         T element_to_move;
@@ -289,6 +285,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     public T remove(int ix) {
         checkBounds(ix, true);
         T element = get(ix);
+        set(ix, null);
         for(int i = ix; i < size-1; i++) {
             set(i,get(i+1));
         }
@@ -336,14 +333,59 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
 
     private <T extends Comparable<? super T>> T[] mergeSort(T[] array) {
-        
-    }
+        if (size < 1) {
+            return array;
+        }
+        T[] tempStorage = (T[]) new Comparable[size];
+        System.out.println("size:" + size);
 
-    private <T extends Comparable<? super T>> T[] merge(T[] array1, T[] array2) {
+        for (int devisionSize = 1; devisionSize < size; devisionSize = devisionSize*2) {
+            for (int devisionIndx = 0; devisionIndx < size; devisionIndx+=2*devisionSize) {
+                int left = devisionIndx;
+                int mid = devisionIndx + devisionSize;
+                int right = devisionIndx + 2*devisionSize;
+                if (mid>size){
+                    mid = size;
+                }
+                if (right>size) {
+                    right = size;
+                }
+                int j = mid;
+                int k = left;
+                int i = left;
 
+                while (i < mid && j < right) {
+                    if (array[i].compareTo(array[j]) <= 0) {
+                        tempStorage[k++] = array[i++];
+                    }else{
+                        tempStorage[k++] = array[j++];
+                    }
+                }
+
+                while (i < mid) {
+                    tempStorage[k++] = array[i++];
+                }
+                while (j < right) {
+                    tempStorage[k++] = array[j++];
+                }
+            }
+            for (int idx = 0; idx < size; idx++){
+                array[idx] = tempStorage[idx];
+            }
+        }
+        return array;
     }
     
     public void sort() {
-
+        T[] valsPushedToLeftArray = (T[]) new Comparable[capacity];
+        for (int idx = 0; idx < size; idx++){
+            valsPushedToLeftArray[idx] = get(idx);
+        }
+        mergeSort(valsPushedToLeftArray);
+        for (int i = 0; i < size; i++) {
+            data[i] = valsPushedToLeftArray[i];
+        }
+        head = size-1;
+        tail = 0;
     }
 }

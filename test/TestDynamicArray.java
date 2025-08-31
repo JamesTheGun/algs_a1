@@ -290,6 +290,11 @@ public class TestDynamicArray {
         print("da.add(0,12);");
         da.add(0, 12);
         printDA(da);
+        print("da.sort();");
+        printDA(da);
+        print("after");
+        da.sort();
+        printDA(da);
         print("clear");
         da.clear();
         printDA(da);
