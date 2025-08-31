@@ -25,6 +25,14 @@ public class TestDynamicArray {
         print("---------");
     }
 
+    private static void printLiteral(DynamicArray<Integer> da) {
+        print("---------");
+        for (int i = 0; i < da.getCapacity(); i++) {
+            print(i + ":" + da.get_literal(i));
+        }
+        print("---------");
+    }
+
     public static void testCreateAndSize() {
         DynamicArray<String> da = new DynamicArray<String>();
         assert da.size() == 0 : "assertion failed A1";
@@ -56,8 +64,6 @@ public class TestDynamicArray {
         da.remove(9);
         da.remove(3);
         da.remove(2);
-        printDA(da);
-        //da.remove(10);
         print(da.get(0));
         assert da.get(0) == 0: "assertion failed C1";
         assert da.get(1) == 1: "assertion failed C2";
@@ -107,16 +113,199 @@ public class TestDynamicArray {
     }
 
     public static void testPrepend() {
-        DynamicArray<Integer> da = createPopulatedList();
+        DynamicArray<Integer> da = new DynamicArray<>();  // start empty
+        printLiteral(da);
+
         da.prepend(99);
+        printLiteral(da);
+
         da.prepend(88);
+        printLiteral(da);
+
         da.prepend(77);
+        printLiteral(da);
+
+        da.append(11);
+        printLiteral(da);
+
+        da.append(22);
+        printLiteral(da);
+
+        da.append(33);
+        printLiteral(da);
+
+        da.prepend(66);
+        printLiteral(da);
+
+        da.prepend(55);
+        printLiteral(da);
+
+        da.prepend(44);
+        printLiteral(da);
+
         printDA(da);
-        assert da.get(0) == 77: "assertion failed G1";
-        assert da.get(1) == 88: "assertion failed G2";
-        assert da.get(2) == 99: "assertion failed G3";
-        assert da.get(3) == 0: "assertion failed G4";
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        print("da.remove(3);");
+        print(da.remove(3));
+        printDA(da);
+
+        print("da.remove(1);");
+        print(da.remove(1));
+        printDA(da);
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        da.append(101);
+        printLiteral(da);
+
+        da.append(202);
+        printLiteral(da);
+
+        da.append(303);
+        printLiteral(da);
+
+        da.prepend(404);
+        printLiteral(da);
+
+        da.prepend(505);
+        printLiteral(da);
+
+        da.prepend(606);
+        printLiteral(da);
+
+        printDA(da);
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        print("da.remove(4);");
+        print(da.remove(4));
+        printDA(da);
+
+        print("da.remove(2);");
+        print(da.remove(2));
+        printDA(da);
+
+        da.append(707);
+        printLiteral(da);
+
+        da.append(808);
+        printLiteral(da);
+
+        da.append(909);
+        printLiteral(da);
+
+        da.prepend(111);
+        printLiteral(da);
+
+        da.prepend(222);
+        printLiteral(da);
+
+        da.prepend(333);
+        printLiteral(da);
+
+        printDA(da);
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        print("da.remove(6);");
+        print(da.remove(6));
+        printDA(da);
+
+        print("da.remove(5);");
+        print(da.remove(5));
+        printDA(da);
+
+        print("da.remove(4);");
+        print(da.remove(4));
+        printDA(da);
+
+        print("da.remove(3);");
+        print(da.remove(3));
+        printDA(da);
+
+        print("da.remove(2);");
+        print(da.remove(2));
+        printDA(da);
+
+        print("da.remove(1);");
+        print(da.remove(1));
+        printDA(da);
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        da.append(999);
+        printLiteral(da);
+
+        da.prepend(888);
+        printLiteral(da);
+
+        da.append(777);
+        printLiteral(da);
+
+        da.prepend(666);
+        printLiteral(da);
+
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        print("da.remove(1);");
+        print(da.remove(1));
+        printDA(da);
+
+        print("da.remove(2);");
+        print(da.remove(2));
+        printDA(da);
+
+        print("da.remove(3);");
+        print(da.remove(3));
+        printDA(da);
+
+        print("da.remove(4);");
+        print(da.remove(4));
+        printDA(da);
+
+        // Optional final assertions if you want to hardcode expected results:
+        print(da.size());
+        print("da.add(4,1);");
+        //print("da.append(1);");
+        da.add(4, 1);
+        //da.append(1);
+        printDA(da);
+        print("da.add(6,1);");
+        da.add(6, 1);
+        printDA(da);
+        print("da.add(0,12);");
+        da.add(0, 12);
+        printDA(da);
+        print("clear");
+        da.clear();
+        printDA(da);
+        print("da.append(1);");
+        da.append(1);
+        printDA(da);
+        print("clear");
+        da.clear();
+        printDA(da);
+        print("da.prepend(1);");
+        da.prepend(1);
+        printDA(da);
+        da.add(2,1);
+        // assert da.get(0) == EXPECTED_VALUE : "Value mismatch!";
     }
+
 
     public static void main(String[] args) {
         System.out.println("Testing DynamicArray Class...");

@@ -30,10 +30,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     private T[] data;
 
     private void checkBounds(int uncorrected_idx, boolean exclusive) {
-        int upperBound = (exclusive) ? capacity : capacity + 1;
+        int upperBound = (exclusive) ? size-1: size;
         int lowerBound = 0;
         int corrected_index = getCircularIndex(uncorrected_idx);
-        if (corrected_index < lowerBound || corrected_index > upperBound) {
+        if (lowerBound > uncorrected_idx || uncorrected_idx > upperBound) {
             throw new IndexOutOfBoundsException("Index " + uncorrected_idx + 
             ", corrected to " + corrected_index + ", is out of bounds. We used upper bound of "
              + upperBound + " and lower bound of " + lowerBound + ". this was an exclusive = " + exclusive + " check.");
@@ -54,13 +54,13 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     private void decrementTale() {
         tail = tail-1;
         if (tail < 0) {
-            tail = (size-1);
+            tail = (capacity-1);
         }
     }
 
     private void incrementTale() {
         tail = tail+1;
-        if (tail > (size-1)) {
+        if (tail > (capacity-1)) {
             tail = 0;
         }
     }
@@ -68,13 +68,13 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     private void decrementHead() {
         head = -1;
         if (head < 0) {
-            head = (size-1);
+            head = (capacity-1);
         }
     }
 
     private void incrementHead() {
         head = head+1;
-        if (head > (size-1)) {
+        if (head > (capacity-1)) {
             head = 0;
         }
     }
@@ -176,7 +176,11 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         make_safe_for_extra_element();
         size++;
         incrementHead();
+        System.out.println("khjasdhjk asdghjkhasgdcjkh");
+        System.out.println(data[head]);
+        System.out.println(element);
         data[head] = element;
+        System.out.println(data[head]);
         return true;
     }
 
@@ -192,7 +196,7 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
             return true;
         }
         make_safe_for_extra_element();
-        incrementTale();
+        decrementTale();
         data[tail] = element;
         size++;
         return true;
@@ -213,10 +217,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         if (handleAddToEmptyList(element)) {
             return true;
         }
-        if (ix == head+1){
+        if (getCircularIndex(ix) == head+1){
             return append(element);
         }
-        if (ix == tail-1){
+        if (getCircularIndex(ix) == tail-1){
             return prepend(element);
         }
         return false;
@@ -224,14 +228,15 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
 
     private boolean addSlow(int ix, T element) {
         checkBounds(ix, false);
-        int crtdIx = getCircularIndex(ix);
         make_safe_for_extra_element();
         size++;
         incrementHead();
         T element_to_move;
-        for(int i = crtdIx; i < head; i++) {
-            element_to_move = data[i];
-            data[i] = element;
+        System.out.println(head);
+        for(int i = ix; i < size; i++) {
+            int circular_i = getCircularIndex(i);
+            element_to_move = data[circular_i];
+            data[circular_i] = element;
             element = element_to_move;
         }
         return true;
@@ -257,6 +262,10 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         return data[crtdIx];
     }
 
+    public T get_literal(int ix) {
+        return data[ix];
+    }
+
     /**
      * Overwrite the "old" value at ix with element, and return the old value.
      * If ix is out of bounds, throw an IndexOutOfBoundsException.
@@ -280,9 +289,8 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     public T remove(int ix) {
         checkBounds(ix, true);
         T element = get(ix);
-        int corrected_index = getCircularIndex(ix);
-        for(int i = corrected_index; i <= head; i++) {
-            data[i] = data[i+1];
+        for(int i = ix; i < size-1; i++) {
+            set(i,get(i+1));
         }
         decrementHead();
         size--;
@@ -326,6 +334,15 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * We will assume sorting in ascending, so you will want to do something
      * like: if (data[i].compareTo(data[j]) < 0) { // data[i] < data[j] }
      */
+
+    private <T extends Comparable<? super T>> T[] mergeSort(T[] array) {
+        
+    }
+
+    private <T extends Comparable<? super T>> T[] merge(T[] array1, T[] array2) {
+
+    }
+    
     public void sort() {
 
     }
