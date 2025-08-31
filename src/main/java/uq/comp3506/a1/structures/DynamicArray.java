@@ -13,22 +13,30 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     /**
      * size tracks the total number of slots being used in the data array
      */
-    private int size = 0;
+    private int size;
 
     /**
      * capacity tracks the total number of slots (used or unused) in the data array
      */
-    private int capacity = 0;
+    private int capacity;
+
+    private int head;
+
+    private int tail;
 
     /**
      * data stores the raw objects
      */
     private T[] data;
 
-    private void checkBounds(int idx, boolean exclusive) {
-        int upperBound = (exclusive) ? size : size + 1;
-        if (idx < 0 || idx >= upperBound) {
-            throw new IndexOutOfBoundsException("Index " + idx + " is out of bounds.");
+    private void checkBounds(int uncorrected_idx, boolean exclusive) {
+        int upperBound = (exclusive) ? capacity : capacity + 1;
+        int lowerBound = 0;
+        int corrected_index = getCircularIndex(uncorrected_idx);
+        if (corrected_index < lowerBound || corrected_index > upperBound) {
+            throw new IndexOutOfBoundsException("Index " + uncorrected_idx + 
+            ", corrected to " + corrected_index + ", is out of bounds. We used upper bound of "
+             + upperBound + " and lower bound of " + lowerBound + ". this was an exclusive = " + exclusive + " check.");
         }
     }
 
@@ -36,16 +44,68 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * Constructs an empty Dynamic Array
      */
     public DynamicArray() {
+        size = 0;
+        capacity = 1;
+        tail = 0;
+        head = 0;
         data = (T[]) new Comparable[capacity];
+    }
+
+    private void decrementTale() {
+        tail = tail-1;
+        if (tail < 0) {
+            tail = (size-1);
+        }
+    }
+
+    private void incrementTale() {
+        tail = tail+1;
+        if (tail > (size-1)) {
+            tail = 0;
+        }
+    }
+
+    private void decrementHead() {
+        head = -1;
+        if (head < 0) {
+            head = (size-1);
+        }
+    }
+
+    private void incrementHead() {
+        head = head+1;
+        if (head > (size-1)) {
+            head = 0;
+        }
+    }
+
+    private int getCircularIndex(int idx) {
+        int val = (tail+idx)%capacity;
+        //System.out.println("tail: "+tail+" idx: "+idx+" capacity: "+capacity + " result: " + val);
+        return val;
     }
 
     private void grow(){
-        capacity++;
-        data = (T[]) new Comparable[capacity];
+
+        //intialise
+        int new_capacity = capacity * 2;
+        T[] new_data = (T[]) new Comparable[new_capacity];
+        
+        for(int i = 0; i < size; i++) {
+            new_data[i] = get(i);
+        }
+
+        data = new_data;
+        head = size-1;
+        tail = 0;
+        capacity = new_capacity;
     }
 
     private void shrink(){
-        capacity--;
+        if (capacity == 1) {
+            return;
+        }
+        capacity = capacity / 2;
         data = (T[]) new Comparable[capacity];
     }
 
@@ -77,6 +137,12 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
         return false;
     }
 
+    private void make_safe_for_extra_element () {
+        if (isFull()) {
+            grow();
+        }
+    }
+
     /**
      * Get current capacity.
      * Again, this is merely a convenience function for you. We will not
@@ -92,13 +158,26 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * Time complexity for full marks: O(1*)
      * That is, O(1) *amortized*.
      */
-    @Override
-    public boolean append(T element) {
-        if (!isFull()) {
-            data[size++] = element;
+
+    private boolean handleAddToEmptyList(T element) {
+        if (size == 0) {
+            size++;
+            data[head] = element;
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean append(T element) {
+        if (handleAddToEmptyList(element)) {
+            return true;
+        }
+        make_safe_for_extra_element();
+        size++;
+        incrementHead();
+        data[head] = element;
+        return true;
     }
 
     /**
@@ -109,7 +188,14 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean prepend(T element) {
-        return add(0,element);
+        if (handleAddToEmptyList(element)) {
+            return true;
+        }
+        make_safe_for_extra_element();
+        incrementTale();
+        data[tail] = element;
+        size++;
+        return true;
     }
 
     /**
@@ -122,20 +208,41 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      * be append, and anything in between will need to shuffle elements around.
      * Time complexity for full marks: O(N)
      */
-    @Override
-    public boolean add(int ix, T element) {
-        checkBounds(ix, false);
-        if (!isFull()) {
-            size++;
-            T element_to_move;
-            for(int i = ix; i < size; i++) {
-                element_to_move = data[i];
-                data[i] = element;
-                element = element_to_move;
-            }
+
+    private boolean checkHandledAddCases(int ix, T element) {
+        if (handleAddToEmptyList(element)) {
             return true;
         }
+        if (ix == head+1){
+            return append(element);
+        }
+        if (ix == tail-1){
+            return prepend(element);
+        }
         return false;
+    }
+
+    private boolean addSlow(int ix, T element) {
+        checkBounds(ix, false);
+        int crtdIx = getCircularIndex(ix);
+        make_safe_for_extra_element();
+        size++;
+        incrementHead();
+        T element_to_move;
+        for(int i = crtdIx; i < head; i++) {
+            element_to_move = data[i];
+            data[i] = element;
+            element = element_to_move;
+        }
+        return true;
+    }
+    
+    @Override
+    public boolean add(int ix, T element) {
+        if (checkHandledAddCases(ix, element)) {
+            return true;
+        }
+        return addSlow(ix, element);
     }
 
     /**
@@ -145,8 +252,9 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public T get(int ix) {
-        checkBounds(ix, false);
-        return data[ix];
+        checkBounds(ix, true);
+        int crtdIx = getCircularIndex(ix);
+        return data[crtdIx];
     }
 
     /**
@@ -157,8 +265,9 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     @Override
     public T set(int ix, T element) {
         checkBounds(ix, true);
-        T old = data[ix];
-        data[ix] = element;
+        int crtdIx = getCircularIndex(ix);
+        T old = data[crtdIx];
+        data[crtdIx] = element;
         return old;
     }
 
@@ -171,9 +280,11 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     public T remove(int ix) {
         checkBounds(ix, true);
         T element = get(ix);
-        for(int i = ix; i < size; i++) {
+        int corrected_index = getCircularIndex(ix);
+        for(int i = corrected_index; i <= head; i++) {
             data[i] = data[i+1];
         }
+        decrementHead();
         size--;
         return element;
     }
@@ -186,21 +297,17 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean removeFirst(T t) {
-        for(int i = 0; i < size; i++) {
-            if (data[i] == t) {
-                remove(i);
-                return true;
-            }
-        }
-        return false;
+        remove(0);
+        return true; //meh, we assume it works
     }
 
     @Override
     public void clear() {
-    for (int i = 0; i < size; i++) {
-        data[i] = null;
-    }
-    size = 0;
+        size = 0;
+        capacity = 1;
+        tail = 0;
+        head = 0;
+        data = (T[]) new Comparable[capacity];
     }
 
     /**

@@ -1,7 +1,7 @@
 {
     "java.project.sourcePaths": [
-        "test",
-        "src\\main\\java"
+        "src\\main\\java",
+        "test"
     ],
     "java.project.referencedLibraries": []
 }
