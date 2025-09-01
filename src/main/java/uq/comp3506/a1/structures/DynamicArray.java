@@ -337,7 +337,6 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
             return array;
         }
         T[] tempStorage = (T[]) new Comparable[size];
-        System.out.println("size:" + size);
 
         for (int devisionSize = 1; devisionSize < size; devisionSize = devisionSize*2) {
             for (int devisionIndx = 0; devisionIndx < size; devisionIndx+=2*devisionSize) {
@@ -350,10 +349,11 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
                 if (right>size) {
                     right = size;
                 }
+
                 int j = mid;
                 int k = left;
                 int i = left;
-
+                
                 while (i < mid && j < right) {
                     if (array[i].compareTo(array[j]) <= 0) {
                         tempStorage[k++] = array[i++];
@@ -377,15 +377,5 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
     }
     
     public void sort() {
-        T[] valsPushedToLeftArray = (T[]) new Comparable[capacity];
-        for (int idx = 0; idx < size; idx++){
-            valsPushedToLeftArray[idx] = get(idx);
-        }
-        mergeSort(valsPushedToLeftArray);
-        for (int i = 0; i < size; i++) {
-            data[i] = valsPushedToLeftArray[i];
-        }
-        head = size-1;
-        tail = 0;
     }
 }

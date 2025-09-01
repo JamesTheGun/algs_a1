@@ -203,10 +203,15 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
         Node next = node.getNext();
         if (prev != null) {
             prev.setNext(next);
+        } else {
+            head = next;
         }
         if (next != null) {
             next.setPrev(prev);
+        } else {
+            tail = prev;
         }
+        size--;
         return node.getData();
     }
 

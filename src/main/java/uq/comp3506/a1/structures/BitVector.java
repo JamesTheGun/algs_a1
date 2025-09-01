@@ -7,6 +7,10 @@ package uq.comp3506.a1.structures;
  */
 public class BitVector {
 
+    private int dataIndx;
+    private long val;
+    private long bitMask;
+
     // The number of bits per integer stored
     public static final int BitsPerElement = 64;
 
@@ -20,6 +24,8 @@ public class BitVector {
      */
     private final long capacity;
 
+    private final long numberOfLongs;
+
     /**
      * We use 'long' instead of 'int' to store elements because it can fit
      * 64 bits instead of 32
@@ -30,32 +36,43 @@ public class BitVector {
      * Constructs a bitvector, pre-allocating enough memory to store `size` bits
      */
     public BitVector(long size) {
-        this.size = -1;
-        // XXX todo
+        this.capacity = 0;
+        this.size = size;
+        int numberOfLongsNeeded = ((int)(size%64) != 0) ? (int)(size/64) + 1 : (int)(size/64);
+        data = new long[numberOfLongsNeeded];
+        numberOfLongs = numberOfLongsNeeded;
     }
 
     /**
      * Returns the total number of bits that can be used
      */
     public long size() {
-        // TODO: replace with the correct implementation
-        return 0;
+        return size;
     }
 
     /**
      * Returns the total number of bits allocated in the data array
      */
     public long capacity() {
-        // TODO: replace with the correct implementation
-        return 0;
+        return capacity;
     }
 
     /**
      * Returns the value of the bit at index ix
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
+
+    private void setForAccessingBit(long ix) {
+        // to do raise out of bounds exception
+        dataIndx = (int)(ix%64);
+        val = data[dataIndx];
+        bitMask = 1L << (ix - dataIndx*64);
+    }
+    
     public boolean get(long ix) {
-        return false;
+        setForAccessingBit(ix);
+        boolean bitIX = (val & bitMask) != 0;
+        return bitIX;
     }
 
     /**
@@ -63,7 +80,8 @@ public class BitVector {
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
     public void set(long ix) {
-
+        setForAccessingBit(ix);
+        val |= bitMask;
     }
 
     /**
@@ -71,7 +89,8 @@ public class BitVector {
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
     public void unset(long ix) {
-
+        setForAccessingBit(ix);
+        val &= bitMask;
     }
 
     /**
@@ -79,8 +98,14 @@ public class BitVector {
      * That means, all 1's become 0's and all 0's become 1's
      */
     public void complement() {
-
-    }
+        long thisLong;
+        long allZeroMask = 0l;
+        for (int i = 0; i < numberOfLongs; i++) {
+            thisLong = data[i];
+            thisLong &= allZeroMask;
+            data[i] = thisLong;
+            }
+        }
 
     /**
      * Shift the bits `dist` positions
@@ -100,6 +125,19 @@ public class BitVector {
      * The bits that "fall off" are always replaced with 0's.
      */
     public void shift(long dist) {
+        long carryOut = 0;
+        long thisLong;
+        long captureCarryOutMask = 0l;
+        for (int i = 0; i < numberOfLongs; i++) {
+            thisLong = data[i];
+            carryOut = thisLong & captureCarryOutMask;
+            if (dist > 0){
+                thisLong <<= dist;
+            } else {
+                thisLong >>= dist;
+            }
+            data[i] = thisLong;
+        }
 
     }
  

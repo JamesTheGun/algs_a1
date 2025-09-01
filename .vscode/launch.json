@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TestDoublyLinkedList_clean",
+            "request": "launch",
+            "mainClass": "TestDoublyLinkedList_clean",
+            "projectName": "A2_6abd7f3d"
+        },
+        {
+            "type": "java",
             "name": "ExtraTestsDoublyLinkedList",
             "request": "launch",
             "mainClass": "ExtraTestsDoublyLinkedList",
