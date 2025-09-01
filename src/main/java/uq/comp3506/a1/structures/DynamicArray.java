@@ -302,8 +302,13 @@ public class DynamicArray<T extends Comparable<T>> implements ListInterface<T> {
      */
     @Override
     public boolean removeFirst(T t) {
-        remove(0);
-        return true; //meh, we assume it works
+        for(int i = 0; i < size-1; i++) {
+            if (get(i+1) == t) {
+                remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

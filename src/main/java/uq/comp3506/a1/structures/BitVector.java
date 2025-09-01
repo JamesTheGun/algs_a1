@@ -62,15 +62,15 @@ public class BitVector {
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
 
-    private void setForAccessingBit(long ix) {
+    private void setVarsForAccessingBit(long ix) {
         // to do raise out of bounds exception
-        dataIndx = (int)(ix%64);
+        dataIndx = (int)((ix+63)/64);
         val = data[dataIndx];
         bitMask = 1L << (ix - dataIndx*64);
     }
     
     public boolean get(long ix) {
-        setForAccessingBit(ix);
+        setVarsForAccessingBit(ix);
         boolean bitIX = (val & bitMask) != 0;
         return bitIX;
     }
@@ -80,8 +80,9 @@ public class BitVector {
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
     public void set(long ix) {
-        setForAccessingBit(ix);
+        setVarsForAccessingBit(ix);
         val |= bitMask;
+        data[dataIndx] = val;
     }
 
     /**
@@ -89,8 +90,9 @@ public class BitVector {
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
     public void unset(long ix) {
-        setForAccessingBit(ix);
+        setVarsForAccessingBit(ix);
         val &= bitMask;
+        data[dataIndx] = val;
     }
 
     /**

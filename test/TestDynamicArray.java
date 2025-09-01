@@ -307,11 +307,173 @@ public class TestDynamicArray {
         print("da.prepend(1);");
         da.prepend(1);
         printDA(da);
-        da.add(2,1);
+
+        da = new DynamicArray<>();
+
+        // Preload array
+        da.append(1);
+        da.append(2);
+        da.append(3);
+        da.append(4);
+        da.append(5);
+        printDA(da);
+
+        // remove(1)
+        print("da.remove(1);");
+        print(da.remove(1));
+        printDA(da);
+
+        // remove(3)
+        da.append(6);
+        da.append(7);
+        print("da.remove(3);");
+        print(da.remove(3));
+        printDA(da);
+
+        // remove(0)
+        print("da.remove(0);");
+        print(da.remove(0));
+        printDA(da);
+
+        // add at positions
+        print("da.add(0,12);");
+        da.add(0, 12);
+        printDA(da);
+
+        print("da.add(4,1);");
+        try { da.add(4, 1); } catch (IndexOutOfBoundsException e) { print(e); }
+        printDA(da);
+
+        // sort
+        print("da.sort();");
+        da.sort();
+        printDA(da);
+
+        // clear
+        print("clear");
+        da.clear();
+        printDA(da);
         // assert da.get(0) == EXPECTED_VALUE : "Value mismatch!";
     }
 
+    // ========== TEST 1: Basic duplicates / not-found ==========
+    private static void testBasicRemoveFirstValue() {
+        print("=== TEST 1: append + removeFirst(T) + get (basics) ===");
+        DynamicArray<Integer> da = new DynamicArray<>();
 
+        print("append 1,2,3,2,4,2");
+        da.append(1); da.append(2); da.append(3); da.append(2); da.append(4); da.append(2);
+        printDA(da);
+
+        print("da.removeFirst(2);  // expect true, remove first 2 at index 1");
+        print(da.removeFirst(2));
+        printDA(da);
+
+        print("da.removeFirst(2);  // expect true, remove next 2");
+        print(da.removeFirst(2));
+        printDA(da);
+
+        print("da.removeFirst(5);  // expect false, 5 not present");
+        print(da.removeFirst(5));
+        printDA(da);
+
+        print("get(0), get(size-1) spot checks:");
+        if (da.size() > 0) print(da.get(0));
+        if (da.size() > 0) print(da.get(da.size() - 1));
+        printLiteral(da);
+    }
+
+    // ========== TEST 2: Wrap + removeFirst(T) across boundary ==========
+    private static void testWrapThenRemoveFirstValue() {
+        print("=== TEST 2: wrap + removeFirst(T) across physical boundary ===");
+        DynamicArray<Integer> da = new DynamicArray<>();
+
+        print("append 0..9");
+        for (int i = 0; i < 10; i++) da.append(i);
+        printDA(da);
+
+        print("advance head via remove(0) x4 (simulate queue pops)");
+        for (int i = 0; i < 4; i++) {
+            print("da.remove(0);");
+            print(da.remove(0));
+        }
+        printDA(da);
+
+        print("append 10..16 (will likely wrap in a circular buffer)");
+        for (int i = 10; i <= 16; i++) da.append(i);
+        printDA(da);
+
+        print("da.removeFirst(12); // target in wrapped tail");
+        print(da.removeFirst(12));
+        printDA(da);
+
+        print("da.removeFirst(2);  // target was in the removed prefix; expect false now");
+        print(da.removeFirst(2));
+        printDA(da);
+
+        print("da.removeFirst(15); // another wrapped element");
+        print(da.removeFirst(15));
+        printDA(da);
+    }
+
+    // ========== TEST 3: Growth while head != 0 + removeFirst(T) ==========
+    private static void testGrowthHeadNotZero() {
+        print("=== TEST 3: growth while head != 0 + removeFirst(T) ===");
+        DynamicArray<Integer> da = new DynamicArray<>();
+
+        print("append 100..107");
+        for (int i = 100; i <= 107; i++) da.append(i);
+        printDA(da);
+
+        print("advance head via remove(0) x5");
+        for (int i = 0; i < 5; i++) {
+            print("da.remove(0);");
+            print(da.remove(0));
+        }
+        printDA(da);
+
+        print("force growth while head != 0: append 200..260");
+        for (int i = 200; i <= 260; i++) da.append(i);
+        print("[size=" + da.size() + "]");
+        print("spot: get(0), get(10), get(last)");
+        if (da.size() > 0) print(da.get(0));
+        if (da.size() > 10) print(da.get(10));
+        if (da.size() > 0) print(da.get(da.size()-1));
+
+        print("removeFirst(230), removeFirst(205), removeFirst(999) // last should be false");
+        print(da.removeFirst(230));
+        printDA(da);
+        print(da.removeFirst(205));
+        printDA(da);
+        print(da.removeFirst(999));
+        printDA(da);
+    }
+
+    // ========== TEST 4: Null handling (only if your DA allows nulls) ==========
+    private static void testNullsRemoveFirstValue() {
+        print("=== TEST 4: null handling in removeFirst(T) ===");
+        DynamicArray<Integer> da = new DynamicArray<>();
+
+        print("append 1, null, 2, null, 3");
+        da.append(1);
+        da.append(null);
+        da.append(2);
+        da.append(null);
+        da.append(3);
+        printDA(da);
+
+        print("da.removeFirst(null); // remove first null");
+        print(da.removeFirst(null));
+        printDA(da);
+
+        print("da.removeFirst(null); // remove second null");
+        print(da.removeFirst(null));
+        printDA(da);
+
+        print("da.removeFirst(null); // expect false now");
+        print(da.removeFirst(null));
+        printDA(da);
+    }
     public static void main(String[] args) {
         System.out.println("Testing DynamicArray Class...");
         testGet();
@@ -322,6 +484,10 @@ public class TestDynamicArray {
         testMisc();
         testSet();
         testPrepend();
+        testBasicRemoveFirstValue();     // duplicates + not-found
+        testWrapThenRemoveFirstValue();  // physical wrap boundary
+        testGrowthHeadNotZero();         // ensureCapacity rebase with head != 0
+        testNullsRemoveFirstValue();     // optional: nulls
         System.out.println("Success!");
         assert 1==2 : "Assertions are working!";
     }
