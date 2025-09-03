@@ -8,8 +8,12 @@ public class TestProblems {
     // The series of tests that need to be implemented
     public static void testShortRuns() {
         System.out.println("Testing 'Short Runs'");
-    }
+        System.out.println(Problems.shortRuns("HELLOOOO"));
+        System.out.println(Problems.shortRuns("AAAAAAAA"));
+        System.out.println(Problems.shortRuns("VERYSAD"));
+        System.out.println(Problems.shortRuns("AAAAAAAAAAAA"));
 
+    }
     public static void testArithmeticRules() {
         System.out.println("Testing 'Arithmetic Rules'");
     }
@@ -70,19 +74,7 @@ public class TestProblems {
     }
 
     public static void main(String[] args) {
-        
-        // Basic checking - make sure a command is provided
-        if (args.length == 0) {
-            usage();
-            return;
-        }
-
-        // Walk the commands and try to dispatch them
-        for (int i = 0; i < args.length; ++i) {
-            dispatch(args[i]);
-        }
-
-        // profit??
+        testShortRuns();
     }
 
 }

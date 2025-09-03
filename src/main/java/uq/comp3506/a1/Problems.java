@@ -21,8 +21,28 @@ public class Problems {
      * input will have up to 100'000 characters
      */
     public static String shortRuns(String input) {
+        int maxConcurent = 9;
+        int numberSeen = 1;
+        int outputCharacterCount = 0;
+        char[] output = new char[input.length() * 2];
+        char workingChar = input.charAt(0);
 
-        return "";
+        int i;
+        for (i = 1; i < input.length(); i++) {
+            char thisChar = input.charAt(i);
+            if (thisChar != workingChar || numberSeen >= maxConcurent) {
+                output[outputCharacterCount++] = workingChar;
+                output[outputCharacterCount++] = (char) ('0' + numberSeen);
+                workingChar = thisChar;
+                numberSeen = 1;
+            } else {
+                numberSeen++;
+            }
+        }
+        output[outputCharacterCount++] = workingChar;
+        output[outputCharacterCount++] = (char) ('0' + numberSeen);
+
+        return new String(output, 0, outputCharacterCount);
     }
 
     /**

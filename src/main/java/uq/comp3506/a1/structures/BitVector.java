@@ -36,9 +36,9 @@ public class BitVector {
      * Constructs a bitvector, pre-allocating enough memory to store `size` bits
      */
     public BitVector(long size) {
-        this.capacity = 0;
         this.size = size;
         int numberOfLongsNeeded = ((int)(size%64) != 0) ? (int)(size/64) + 1 : (int)(size/64);
+        capacity = numberOfLongsNeeded*64;
         data = new long[numberOfLongsNeeded];
         numberOfLongs = numberOfLongsNeeded;
     }
@@ -57,18 +57,26 @@ public class BitVector {
         return capacity;
     }
 
+    private void checkBounds(long idx, boolean exclusive) {
+        long upperBound = (exclusive) ? size : size + 1;
+        if (idx < 0 || idx >= upperBound) {
+            throw new IndexOutOfBoundsException("Index " + idx + " is out of bounds.");
+        }
+    }
+
+    private void setVarsForAccessingBit(long ix) {
+        checkBounds(ix,true);
+        dataIndx = (int)(ix/64);
+        val = data[dataIndx];
+        bitMask = 1L << (ix - dataIndx*64);
+    }
+    
+
     /**
      * Returns the value of the bit at index ix
      * If the index is out of bounds, you should throw an IndexOutOfBoundsException
      */
 
-    private void setVarsForAccessingBit(long ix) {
-        // to do raise out of bounds exception
-        dataIndx = (int)((ix+63)/64);
-        val = data[dataIndx];
-        bitMask = 1L << (ix - dataIndx*64);
-    }
-    
     public boolean get(long ix) {
         setVarsForAccessingBit(ix);
         boolean bitIX = (val & bitMask) != 0;
@@ -91,7 +99,7 @@ public class BitVector {
      */
     public void unset(long ix) {
         setVarsForAccessingBit(ix);
-        val &= bitMask;
+        val = ~bitMask;
         data[dataIndx] = val;
     }
 
@@ -101,10 +109,10 @@ public class BitVector {
      */
     public void complement() {
         long thisLong;
-        long allZeroMask = 0l;
+        long allOnesMask = ~0l;
         for (int i = 0; i < numberOfLongs; i++) {
             thisLong = data[i];
-            thisLong &= allZeroMask;
+            thisLong ^= allOnesMask;
             data[i] = thisLong;
             }
         }
@@ -127,22 +135,33 @@ public class BitVector {
      * The bits that "fall off" are always replaced with 0's.
      */
     public void shift(long dist) {
-        long carryOut = 0;
-        long thisLong;
-        long captureCarryOutMask = 0l;
-        for (int i = 0; i < numberOfLongs; i++) {
-            thisLong = data[i];
-            carryOut = thisLong & captureCarryOutMask;
-            if (dist > 0){
-                thisLong <<= dist;
-            } else {
-                thisLong >>= dist;
-            }
-            data[i] = thisLong;
-        }
+        int shiftAmount = (int)((dist < 0 ? -dist : dist) & 63); //clever mod 64
+        if (dist > 0) { //left sift
+            long previousCaptureCarryOutMask = 0L;
+            for (int i = 0; i < numberOfLongs; i++){
+                long thisLong = data[i];
 
+                long captureCarryOutMask = thisLong >>> (64 - shiftAmount);
+                thisLong <<= shiftAmount;
+                thisLong |= previousCaptureCarryOutMask;
+
+                data[i] = thisLong;
+                previousCaptureCarryOutMask = captureCarryOutMask;
+            }
+        }else{ //right sift
+            long previousCaptureCarryOutMask = 0L;
+            for (int i = (int) numberOfLongs - 1; i >= 0; i--){
+                long thisLong = data[i];
+                long captureCarryOutMask = thisLong << (64 - shiftAmount);
+
+                thisLong >>>= shiftAmount;
+                thisLong |= previousCaptureCarryOutMask;
+
+                data[i] = thisLong;
+                previousCaptureCarryOutMask = captureCarryOutMask;
+            }
+        }
     }
- 
     /**
      * Rotate the bits `dist` positions
      * If dist is positive, this is a left rotation, assuming the least significant
@@ -161,9 +180,38 @@ public class BitVector {
      * Don't forget that you must also handle negative values of dist, and
      * these will invoke a right shift.
      */
-    public void rotate(long dist) {
+
+public void rotate(long dist) {
+    if (size <= 1) return;
+
+    // Use magnitude for the branch you’re taking
+    int rotationAmount = (int) (dist >= 0 ? Math.floorMod(dist, size)
+                             : Math.floorMod(-dist, size));
+    if (rotationAmount == 0) return;
+
+    BitVector carryOut = new BitVector(size);
+
+    if (dist >= 0) {
+        for (long i = size - rotationAmount; i < size; i++) {
+            if (get(i)) carryOut.set(i);
+        }
+        shift(rotationAmount);
+        for (int i = 0; i < rotationAmount; i++) {
+            if (carryOut.get(size - rotationAmount + i)) set(i);
+        }
+    } else {
+        for (int i = 0; i < rotationAmount; i++) {
+            if (get(i)) carryOut.set(i);
+        }
+        shift(-rotationAmount);
+
+        for (int i = 0; i < rotationAmount; i++) {
+            if (carryOut.get(i)) set((int)(size - rotationAmount + i));
+        }
 
     }
+}
+
 
     /**
      * COMP7505 only (COMP3506 may do this for fun)
