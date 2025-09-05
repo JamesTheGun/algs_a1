@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "TestDynamicArray",
+            "request": "launch",
+            "mainClass": "uq.comp3506.a1.structures.TestDynamicArray",
+            "projectName": "A2_6abd7f3d"
+        },
+        {
+            "type": "java",
             "name": "TestDoublyLinkedList_clean",
             "request": "launch",
             "mainClass": "TestDoublyLinkedList_clean",

@@ -7,7 +7,9 @@ import uq.comp3506.a1.structures.BitVector;
 public class TestBitVector {
 
     // ---------- tiny printers ----------
-    private static void print(Object o) { System.out.println(o); }
+    private static void print(Object o) {
+        System.out.println(o);
+    }
 
     private static void printBV(BitVector bv, int limit) {
         final int BITS_PER_LINE = 8; // adjust to taste
@@ -44,31 +46,50 @@ public class TestBitVector {
         int b = Math.min((int) bv.size(), Math.max(from, to));
         StringBuilder sb = new StringBuilder();
         sb.append(a).append("..").append(b).append(": ");
-        for (int i = a; i < b; i++) sb.append(bv.get(i) ? '1' : '0');
+        for (int i = a; i < b; i++)
+            sb.append(bv.get(i) ? '1' : '0');
         print(sb.toString());
     }
 
     private static void setRange(BitVector bv, int lo, int hi) {
-        for (int i = lo; i <= hi; i++) bv.set(i);
+        for (int i = lo; i <= hi; i++)
+            bv.set(i);
     }
 
     // ---------- assert helpers ----------
-    private static void assertTrue(boolean cond, String msg) { assert cond : msg; }
-    private static void assertFalse(boolean cond, String msg) { assert !cond : msg; }
-    private static void assertEq(long a, long b, String msg) { assert a == b : msg + " (got " + a + ", want " + b + ")"; }
-    private static void assertEq(int a, int b, String msg) { assert a == b : msg + " (got " + a + ", want " + b + ")"; }
-    private static void assertEq(boolean a, boolean b, String msg) { assert a == b : msg + " (got " + a + ", want " + b + ")"; }
+    private static void assertTrue(boolean cond, String msg) {
+        assert cond : msg;
+    }
 
-    @FunctionalInterface private interface Throwing {
+    private static void assertFalse(boolean cond, String msg) {
+        assert !cond : msg;
+    }
+
+    private static void assertEq(long a, long b, String msg) {
+        assert a == b : msg + " (got " + a + ", want " + b + ")";
+    }
+
+    private static void assertEq(int a, int b, String msg) {
+        assert a == b : msg + " (got " + a + ", want " + b + ")";
+    }
+
+    private static void assertEq(boolean a, boolean b, String msg) {
+        assert a == b : msg + " (got " + a + ", want " + b + ")";
+    }
+
+    @FunctionalInterface
+    private interface Throwing {
         void run() throws Exception;
     }
+
     private static void assertThrows(Class<? extends Throwable> type, Throwing fn, String msg) {
         boolean threw = false;
-        try { fn.run(); }
-        catch (Throwable t) {
+        try {
+            fn.run();
+        } catch (Throwable t) {
             threw = true;
-            assertTrue(type.isInstance(t),
-                msg + " (threw " + t.getClass().getSimpleName() + ", expected " + type.getSimpleName() + ")");
+            assertTrue(type.isInstance(t), msg + " (threw " + t.getClass().getSimpleName()
+                    + ", expected " + type.getSimpleName() + ")");
         }
         assertTrue(threw, msg + " (did not throw)");
     }
@@ -83,10 +104,10 @@ public class TestBitVector {
         printBV(bv, 16);
 
         // assertions
-        assertEq((int)bv.size(), 130, "size mismatch");
+        assertEq((int) bv.size(), 130, "size mismatch");
         // capacity should be >= size, typically rounded to a multiple of 64
         assertTrue(bv.capacity() >= 130, "capacity must be >= size");
-        assertEq((int)(bv.capacity() % 64), 0, "capacity should be a multiple of 64");
+        assertEq((int) (bv.capacity() % 64), 0, "capacity should be a multiple of 64");
         // brand-new BV must be all zeros
         for (int i = 0; i < bv.size(); i++) {
             assertFalse(bv.get(i), "fresh bit should be 0 at " + i);
@@ -98,7 +119,11 @@ public class TestBitVector {
         BitVector bv = new BitVector(130);
 
         print("set 0, 1, 63, 64, 127");
-        bv.set(0); bv.set(1); bv.set(63); bv.set(64); bv.set(127);
+        bv.set(0);
+        bv.set(1);
+        bv.set(63);
+        bv.set(64);
+        bv.set(127);
         printBV(bv, 10);
 
         // gets
@@ -113,7 +138,8 @@ public class TestBitVector {
         assertFalse(bv.get(65), "bit 65 should be 0");
 
         print("unset(1), unset(64)");
-        bv.unset(1); bv.unset(64);
+        bv.unset(1);
+        bv.unset(64);
         assertTrue(bv.get(0), "bit 0 should stay 1");
         assertFalse(bv.get(1), "bit 1 should be 0 after unset");
         assertTrue(bv.get(63), "bit 63 should stay 1");
@@ -186,91 +212,119 @@ public class TestBitVector {
         print("shift(+3)");
         bv.shift(3);
         printBV(bv, 96);
-        assertTrue(bv.get(10), "left block should now start at 10 (original 6 + 3 -> 9; prior +1 already applied)");
+        assertTrue(bv.get(10),
+                "left block should now start at 10 (original 6 + 3 -> 9; prior +1 already applied)");
         assertEq(maybePopcount(bv), initialOnes, "popcount invariant under shift (within bounds)");
 
         print("shift(+65)");
         bv.shift(65);
         printBV(bv, 128);
         // everything near the left should now have moved far right; left area mostly zeros
-        for (int i = 0; i < 10; i++) assertFalse(bv.get(i), "low prefix should be zeroed after big right shift");
+        for (int i = 0; i < 10; i++)
+            assertFalse(bv.get(i), "low prefix should be zeroed after big right shift");
 
         print("shift(-70)");
         bv.shift(-70);
         printBV(bv, 96);
         // shifting back left shouldn’t produce ones outside [0, size)
-        for (int i = 120; i < 128; i++) assertFalse(bv.get(i), "high tail should be zeros after left shift");
-        assertEq(maybePopcount(bv), initialOnes, "popcount invariant across opposing shifts (within bounds)");
+        for (int i = 120; i < 128; i++)
+            assertFalse(bv.get(i), "high tail should be zeros after left shift");
+        assertEq(maybePopcount(bv), initialOnes,
+                "popcount invariant across opposing shifts (within bounds)");
     }
 
-private static void testRotate() {
-    print("=== TEST 4: rotate (wrap-around, +/- dist, > size) ===");
-    BitVector bv = new BitVector(64);
+    private static void testRotate() {
+        print("=== TEST 4: rotate (wrap-around, +/- dist, > size) ===");
+        BitVector bv = new BitVector(64);
 
-    setRange(bv, 0, 2);    // head run
-    setRange(bv, 8, 8);    // single
-    setRange(bv, 31, 31);  // mid spike
-    setRange(bv, 60, 63);  // tail block
+        setRange(bv, 0, 2); // head run
+        setRange(bv, 8, 8); // single
+        setRange(bv, 31, 31); // mid spike
+        setRange(bv, 60, 63); // tail block
 
-    int ones = maybePopcount(bv);
+        int ones = maybePopcount(bv);
 
-    print("initial"); printBV(bv, 64);
-    BitVector base = cloneBV(bv);
+        print("initial");
+        printBV(bv, 64);
+        BitVector base = cloneBV(bv);
 
-    print("rotate(+1)");
-    bv.rotate(1);
-    printBV(bv, 64);
-    assertTrue(bv.get(1), "bit 0 should appear at 1 after +1");
-    //assertEq(maybePopcount(bv), ones, "rotate preserves popcount");
+        print("rotate(+1)");
+        bv.rotate(1);
+        printBV(bv, 64);
+        assertTrue(bv.get(1), "bit 0 should appear at 1 after +1");
+        // assertEq(maybePopcount(bv), ones, "rotate preserves popcount");
 
-    print("rotate(+64) // modulo size → expect same as before");
-    BitVector before = cloneBV(bv);
-    bv.rotate(64);
-    printBV(bv, 64);
-    for (int i = 0; i < 64; i++) assertEq(bv.get(i), before.get(i), "rotate by size is identity");
+        print("rotate(+64) // modulo size → expect same as before");
+        BitVector before = cloneBV(bv);
+        bv.rotate(64);
+        printBV(bv, 64);
+        for (int i = 0; i < 64; i++)
+            assertEq(bv.get(i), before.get(i), "rotate by size is identity");
 
-    print("rotate(+129) // 129 ≡ 1");
-    bv.rotate(129);
-    printBV(bv, 64);
-    // Equivalent to another +1 from previous state
-    for (int i = 0; i < 64; i++) {
-        assertEq(bv.get(i), shiftFrom(before, +1).get(i), "rotate +129 equals +1");
+        print("rotate(+129) // 129 ≡ 1");
+        bv.rotate(129);
+        printBV(bv, 64);
+        // Equivalent to another +1 from previous state
+        for (int i = 0; i < 64; i++) {
+            assertEq(bv.get(i), shiftFrom(before, +1).get(i), "rotate +129 equals +1");
+        }
+
+        print("rotate(-5)");
+        bv.rotate(-5);
+        printBV(bv, 64);
+        // Net effect since "before": +64 ≡ 0, +129 ≡ +1, then -5 => -4
+        BitVector expected = shiftFrom(before, -4);
+        for (long i = 0; i < 64; i++) {
+            assertEq(bv.get(i), expected.get(i), "net rotate (+64,+129,-5) ≡ -4");
+        }
+
+        // rotate back to base
+        bv.rotate(+3);
+        for (long i = 0; i < 64; i++)
+            assertEq(bv.get(i), base.get(i), "rotating back recovers base");
     }
-
-    print("rotate(-5)");
-    bv.rotate(-5);
-    printBV(bv, 64);
-    // Net effect since "before": +64 ≡ 0, +129 ≡ +1, then -5 => -4
-    BitVector expected = shiftFrom(before, -4);
-    for (long i = 0; i < 64; i++) {
-        assertEq(bv.get(i), expected.get(i), "net rotate (+64,+129,-5) ≡ -4");
-    }
-
-    // rotate back to base
-    bv.rotate(+3);
-    for (long i = 0; i < 64; i++) assertEq(bv.get(i), base.get(i), "rotating back recovers base");
-}
 
     private static void testOutOfBounds() {
         print("=== TEST 6: out-of-bounds behavior (should throw) ===");
         BitVector bv = new BitVector(33);
 
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("get(-1)"); bv.get(-1); }, "get(-1) should throw");
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("get(33)"); bv.get(33); }, "get(33) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("get(-1)");
+            bv.get(-1);
+        }, "get(-1) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("get(33)");
+            bv.get(33);
+        }, "get(33) should throw");
 
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("set(-1)"); bv.set(-1); }, "set(-1) should throw");
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("set(33)"); bv.set(33); }, "set(33) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("set(-1)");
+            bv.set(-1);
+        }, "set(-1) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("set(33)");
+            bv.set(33);
+        }, "set(33) should throw");
 
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("unset(-1)"); bv.unset(-1); }, "unset(-1) should throw");
-        assertThrows(IndexOutOfBoundsException.class, () -> { print("unset(33)"); bv.unset(33); }, "unset(33) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("unset(-1)");
+            bv.unset(-1);
+        }, "unset(-1) should throw");
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            print("unset(33)");
+            bv.unset(33);
+        }, "unset(33) should throw");
     }
 
     // ================== tiny BV utilities for rotate expectations ==================
     private static BitVector cloneBV(BitVector src) {
         BitVector out = new BitVector(src.size());
-        for (int i = 0; i < src.size(); i++) if (src.get(i)) out.set(i);
+        for (int i = 0; i < src.size(); i++)
+            if (src.get(i))
+                out.set(i);
         return out;
     }
+
     // build expected rotate result by copying bits mathematically
     private static BitVector shiftFrom(BitVector base, int rot) {
         int n = (int) base.size();
@@ -289,13 +343,15 @@ private static void testRotate() {
     // popcount helper that tolerates unimplemented (-1)
     // popcount helper that tolerates unimplemented (-1)
     private static int maybePopcount(BitVector bv) {
-        long p = bv.popcount();          // accept long
-        if (p >= 0) return (int) p;      // cast once (tests expect int)
+        long p = bv.popcount(); // accept long
+        if (p >= 0)
+            return (int) p; // cast once (tests expect int)
 
         int count = 0;
-        int n = (int) bv.size();         // if size() is long, narrow once
+        int n = (int) bv.size(); // if size() is long, narrow once
         for (int i = 0; i < n; i++) {
-            if (bv.get(i)) count++;
+            if (bv.get(i))
+                count++;
         }
         return count;
     }
@@ -311,7 +367,7 @@ private static void testRotate() {
         testOutOfBounds();
 
         System.out.println("Success!");
-        // Tip: run with assertions enabled:  java -ea TestBitVector
+        // Tip: run with assertions enabled: java -ea TestBitVector
         // assert 1==2 : "Assertions are working!";
     }
 }

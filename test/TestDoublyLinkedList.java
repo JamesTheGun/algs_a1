@@ -44,11 +44,11 @@ public class TestDoublyLinkedList {
 
     public static void testGet() {
         DoublyLinkedList<Integer> dll = createPopulatedList();
-        assert dll.get(0) == 0: "assertion failed #1";
-        assert dll.get(1) == 1: "assertion failed #2";
-        assert dll.get(2) == 2: "assertion failed #3";
-        assert dll.get(8) == 8: "assertion failed #4";
-        assert dll.get(9) == 9: "assertion failed #5";
+        assert dll.get(0) == 0 : "assertion failed #1";
+        assert dll.get(1) == 1 : "assertion failed #2";
+        assert dll.get(2) == 2 : "assertion failed #3";
+        assert dll.get(8) == 8 : "assertion failed #4";
+        assert dll.get(9) == 9 : "assertion failed #5";
     }
 
     public static void testInsertion() {
@@ -64,23 +64,23 @@ public class TestDoublyLinkedList {
 
     public static void testGetLastGetFirst() {
         DoublyLinkedList<Integer> dll = createPopulatedList();
-        assert(dll.getLast() == 9) : "assertion failed D1";
-        assert(dll.getFirst() == 0) : "assertion failed D2";
+        assert (dll.getLast() == 9) : "assertion failed D1";
+        assert (dll.getFirst() == 0) : "assertion failed D2";
     }
 
     public static void testRemove() {
         DoublyLinkedList<Integer> dll = createPopulatedList();
         dll.remove(9);
 
-        //dll.remove(10);
-        assert dll.getFirst() == 0: "assertion failed C0";
-        assert dll.get(0) == 0: "assertion failed C1";
-        assert dll.get(1) == 1: "assertion failed C2";
-        assert dll.get(2) == 2: "assertion failed C3";
+        // dll.remove(10);
+        assert dll.getFirst() == 0 : "assertion failed C0";
+        assert dll.get(0) == 0 : "assertion failed C1";
+        assert dll.get(1) == 1 : "assertion failed C2";
+        assert dll.get(2) == 2 : "assertion failed C3";
         // CHANGED: after removing index 9, last value should be 8 at index 8
         print_ddl(dll);
-        assert dll.getLast() == 8: "assertion failed C4";
-        assert dll.get(8) == 8: "assertion failed C5";
+        assert dll.getLast() == 8 : "assertion failed C4";
+        assert dll.get(8) == 8 : "assertion failed C5";
     }
 
     // NEW: minimal remove-first coverage using remove(0)
@@ -98,38 +98,38 @@ public class TestDoublyLinkedList {
 
     public static void testAdd() {
         DoublyLinkedList<Integer> dll_populated = createPopulatedList();
-        dll_populated.add(0,99);
-        dll_populated.add(1,88);
-        dll_populated.add(3,77);
-        dll_populated.add(8,66);
-        dll_populated.add(9,55);
-        dll_populated.add(5,44);
+        dll_populated.add(0, 99);
+        dll_populated.add(1, 88);
+        dll_populated.add(3, 77);
+        dll_populated.add(8, 66);
+        dll_populated.add(9, 55);
+        dll_populated.add(5, 44);
 
-        //dll.remove(10);
+        // dll.remove(10);
 
-        assert dll_populated.get(0) == 99: "assertion failed E3";
-        assert dll_populated.get(3) == 77: "assertion failed E4";
-        assert dll_populated.getLast() == 9: "assertion failed E5";
-        assert dll_populated.get(12) == 6: "assertion failed E6";
-        assert dll_populated.get(9) == 66: "assertion failed E6";
+        assert dll_populated.get(0) == 99 : "assertion failed E3";
+        assert dll_populated.get(3) == 77 : "assertion failed E4";
+        assert dll_populated.getLast() == 9 : "assertion failed E5";
+        assert dll_populated.get(12) == 6 : "assertion failed E6";
+        assert dll_populated.get(9) == 66 : "assertion failed E6";
     }
 
     public static void testMisc() {
         DoublyLinkedList<Integer> dll = createPopulatedList();
-        //dll.get(10); //testing error raising
+        // dll.get(10); //testing error raising
     }
 
-    public static void testSet(){
+    public static void testSet() {
         DoublyLinkedList<Integer> dll = createPopulatedList();
-        dll.set(0,99);
-        dll.set(4,88);
-        dll.set(9,77);
-        //dll.set(102,66); // testing that this breaks
+        dll.set(0, 99);
+        dll.set(4, 88);
+        dll.set(9, 77);
+        // dll.set(102,66); // testing that this breaks
 
-        assert dll.get(0) == 99: "assertion failed F1";
-        assert dll.get(4) == 88: "assertion failed F2";
-        assert dll.get(8) == 8: "assertion failed F3";
-        assert dll.get(9) == 77: "assertion failed F4";
+        assert dll.get(0) == 99 : "assertion failed F1";
+        assert dll.get(4) == 88 : "assertion failed F2";
+        assert dll.get(8) == 8 : "assertion failed F3";
+        assert dll.get(9) == 77 : "assertion failed F4";
     }
 
     public static void testPrepend() {
@@ -137,10 +137,10 @@ public class TestDoublyLinkedList {
         dll.prepend(99);
         dll.prepend(88);
         dll.prepend(77);
-        assert dll.get(0) == 77: "assertion failed G1";
-        assert dll.get(1) == 88: "assertion failed G2";
-        assert dll.get(2) == 99: "assertion failed G3";
-        assert dll.get(3) == 0: "assertion failed G4";
+        assert dll.get(0) == 77 : "assertion failed G1";
+        assert dll.get(1) == 88 : "assertion failed G2";
+        assert dll.get(2) == 99 : "assertion failed G3";
+        assert dll.get(3) == 0 : "assertion failed G4";
     }
 
     public static void main(String[] args) {

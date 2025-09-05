@@ -1,7 +1,15 @@
 {
-    "java.project.sourcePaths": [
-        "src\\main\\java",
-        "test"
-    ],
-    "java.project.referencedLibraries": []
+    // Auto-format & imports
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    // Formatter settings (Google/Eclipse style)
+    "java.format.settings.profile": "GoogleStyle",
+    "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+    // Use Checkstyle with your provided config
+    "checkstyle.configuration": "C:/Users/jamed/OneDrive/Documents/alg_and_ds/A2/test/checkstyle.xml",
+    "checkstyle.java.configurationSeverity": "warning",
+    // Optional: make Google Java Format the default formatter if installed
+    // "editor.defaultFormatter": "google.google-java-format"
 }

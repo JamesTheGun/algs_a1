@@ -3,10 +3,9 @@
 package uq.comp3506.a1.structures;
 
 /**
- * Supplied by the COMP3506/7505 teaching team, Semester 2, 2025.
- * A custom doubly linked list class supporting generic types.
- * The Node class is a nested class, as Node objects will never
- * be exposed to users of the DoublyLinkedList object.
+ * Supplied by the COMP3506/7505 teaching team, Semester 2, 2025. A custom doubly linked list class
+ * supporting generic types. The Node class is a nested class, as Node objects will never be exposed
+ * to users of the DoublyLinkedList object.
  *
  * @param <T> The type of elements stored in the list
  */
@@ -20,8 +19,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     /**
      * Constructs an empty linked list
      */
-    public DoublyLinkedList() {
-    }
+    public DoublyLinkedList() {}
 
     /**
      * Returns the number of elements contained in the DLL.
@@ -40,9 +38,8 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Checks the bounds on the DLL
-     * Note that if exclusive is true, [0, size-1] are valid bounds;
-     * if exclusive is false, the check will use [0, size] as valid bounds.
+     * Checks the bounds on the DLL Note that if exclusive is true, [0, size-1] are valid bounds; if
+     * exclusive is false, the check will use [0, size] as valid bounds.
      */
     private void checkBounds(int idx, boolean exclusive) {
         int upperBound = (exclusive) ? size : size + 1;
@@ -52,7 +49,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     private Node getNodeFirstHalf(int idx) {
-        //System.out.println("####");
+        // System.out.println("####");
         checkBounds(idx, true);
         Node cur = this.head;
         int curIdx = 0;
@@ -64,9 +61,9 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     private Node getNodeSecondHalf(int idx) {
-        //System.out.println("----");
+        // System.out.println("----");
         checkBounds(idx, true);
-        int curIdx = size-1;
+        int curIdx = size - 1;
         Node cur = this.tail;
         while (curIdx > idx) {
             cur = cur.getPrev();
@@ -76,32 +73,33 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     private Node getNode(int idx) {
-        //System.out.println("++++");
-        //get node from front if its closer to the front
-        if (idx < size/2) {
+        // System.out.println("++++");
+        // get node from front if its closer to the front
+        if (idx < size / 2) {
             return getNodeFirstHalf(idx);
         }
-        //get node from back if its closer to the back.
+        // get node from back if its closer to the back.
         return getNodeSecondHalf(idx);
     }
 
     /**
-     * Returns the element at idx if it exists, throwing an exception if the
-     * index is out of bounds (via checkBounds)
+     * Returns the element at idx if it exists, throwing an exception if the index is out of bounds
+     * (via checkBounds)
      */
     @Override // See ListInterface
     public T get(int idx) {
-        return getNode(idx).getData(); //no reason to keep the node-getting logic here -- moved it to another method so it can be used in other places
+        return getNode(idx).getData(); // no reason to keep the node-getting logic here -- moved it
+                                       // to another method so it can be used in other places
     }
 
 
     /**
-     * Overwrites the "old" value at idx to t, and returns the "old" value;
-     * throws an exception if the index is out of bounds (via checkBounds).
+     * Overwrites the "old" value at idx to t, and returns the "old" value; throws an exception if
+     * the index is out of bounds (via checkBounds).
      */
     @Override // See ListInterface
     public T set(int idx, T t) {
-        checkBounds(idx,false);
+        checkBounds(idx, false);
         Node cur = getNode(idx);
         T oldData = cur.getData();
         cur.setData(t);
@@ -109,8 +107,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Adds an element to the end of the DLL. Returns true if successful,
-     * false otherwise
+     * Adds an element to the end of the DLL. Returns true if successful, false otherwise
      */
     @Override // See ListInterface
     public boolean append(T data) {
@@ -127,8 +124,7 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Adds an element to the start of the DLL. Returns true if successful,
-     * false otherwise
+     * Adds an element to the start of the DLL. Returns true if successful, false otherwise
      */
     @Override
     public boolean prepend(T data) {
@@ -145,12 +141,10 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Adds an element to the DLL at the given index idx. Returns true if
-     * successful, false otherwise. If idx is out of bounds, throws an
-     * exception via checkBounds.
-     * Note that adding an element to the first index beyond the final
-     * element is valid -- that is, we can call add with idx = this.size
-     * which triggers an append.
+     * Adds an element to the DLL at the given index idx. Returns true if successful, false
+     * otherwise. If idx is out of bounds, throws an exception via checkBounds. Note that adding an
+     * element to the first index beyond the final element is valid -- that is, we can call add with
+     * idx = this.size which triggers an append.
      */
     @Override // See ListInterface
     public boolean add(int idx, T data) {
@@ -193,12 +187,12 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Removes and returns the element at idx if the idx is valid; throws an
-     * exception if the idx is not valid.
+     * Removes and returns the element at idx if the idx is valid; throws an exception if the idx is
+     * not valid.
      */
     @Override // See ListInterface
     public T remove(int idx) {
-        Node node = getNode(idx); //this throws the exception
+        Node node = getNode(idx); // this throws the exception
         Node prev = node.getPrev();
         Node next = node.getNext();
         if (prev != null) {
@@ -216,9 +210,8 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * Finds and removes the first matching element, returning true if
-     * successful and false otherwise.
-     * Does nothing to the list if there is no such element
+     * Finds and removes the first matching element, returning true if successful and false
+     * otherwise. Does nothing to the list if there is no such element
      */
     public boolean removeFirst(T t) {
         if (isEmpty()) {
@@ -242,10 +235,8 @@ public class DoublyLinkedList<T> implements ListInterface<T> {
     }
 
     /**
-     * The nested Node class.
-     * data: The data payload
-     * prev: The reference to the previous node in the list
-     * next: The reference to the next node in the list
+     * The nested Node class. data: The data payload prev: The reference to the previous node in the
+     * list next: The reference to the next node in the list
      */
     private class Node {
         private T data;
